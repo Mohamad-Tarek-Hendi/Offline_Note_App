@@ -52,6 +52,8 @@ fun NoteScreen(
     navController: NavController,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
+
+    //region Variable
     val state = viewModel.state.value
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -62,8 +64,9 @@ fun NoteScreen(
             listState.firstVisibleItemIndex == 0
         }
     }
+    //endregion
 
-
+    //region Screen
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = {
@@ -92,6 +95,7 @@ fun NoteScreen(
                 .padding(it)
         ) {
 
+            //region Text And Icon
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -110,7 +114,9 @@ fun NoteScreen(
                     )
                 }
             }
+            //endregion
 
+            //region OrderSection
             AnimatedVisibility(
                 visible = state.isOrderSectionVisible,
                 enter = fadeIn() + slideInVertically(),
@@ -125,8 +131,11 @@ fun NoteScreen(
                     }
                 )
             }
+            //endregion
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            //region List of Note
             LazyColumn(modifier = Modifier.fillMaxSize()) {
 
                 items(state.notes) { note ->
@@ -156,10 +165,11 @@ fun NoteScreen(
                 }
 
             }
-
-
+            //endregion
         }
 
 
     }
+    //endregion
+
 }
