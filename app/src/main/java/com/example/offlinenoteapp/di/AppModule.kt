@@ -7,6 +7,7 @@ import com.example.offlinenoteapp.feature_note.data.data_source.NoteDatabase.Com
 import com.example.offlinenoteapp.feature_note.data.repository.NoteRepositoryImp
 import com.example.offlinenoteapp.feature_note.domain.repository.NoteRepository
 import com.example.offlinenoteapp.feature_note.domain.use_cases.DeleteNoteUseCase
+import com.example.offlinenoteapp.feature_note.domain.use_cases.GetNoteByIdUseCase
 import com.example.offlinenoteapp.feature_note.domain.use_cases.GetNotesUseCase
 import com.example.offlinenoteapp.feature_note.domain.use_cases.UpsertNoteUseCase
 import com.example.offlinenoteapp.feature_note.domain.use_cases.base.NotesUseCases
@@ -46,7 +47,8 @@ object AppModule {
         return NotesUseCases(
             getNotesUseCase = GetNotesUseCase(repository),
             deleteNoteUseCase = DeleteNoteUseCase(repository),
-            upsertNoteUseCase = UpsertNoteUseCase(repository)
+            upsertNoteUseCase = UpsertNoteUseCase(repository),
+            getNoteByIdUseCase = GetNoteByIdUseCase(repository)
         )
     }
 
