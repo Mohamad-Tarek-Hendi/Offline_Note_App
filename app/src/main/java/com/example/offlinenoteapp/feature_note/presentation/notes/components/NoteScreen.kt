@@ -44,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.offlinenoteapp.feature_note.presentation.notes.NotesEvent
 import com.example.offlinenoteapp.feature_note.presentation.notes.NotesViewModel
+import com.example.offlinenoteapp.feature_note.presentation.util.Screen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,7 +80,7 @@ fun NoteScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    TODO("Navigate To AddEdit Screen")
+                    navController.navigate(Screen.AddEditNoteScreen.route)
                 },
                 expanded = expandedFab,
                 icon = { Icon(Icons.Filled.Add, "Localized Description") },
@@ -140,12 +141,16 @@ fun NoteScreen(
 
                 items(state.notes) { note ->
 
-
                     NoteItem(
                         note = note,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { },
+                            .clickable {
+                                navController.navigate(
+                                    Screen.AddEditNoteScreen.route +
+                                            "?noteId=${note.id}&noteColor=${note.color}"
+                                )
+                            },
                         onDeleteClick = {
                             viewModel.onEvent(NotesEvent.DeleteNote(note))
                             scope.launch {
@@ -159,17 +164,12 @@ fun NoteScreen(
                             }
                         }
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                 }
 
             }
             //endregion
         }
-
-
     }
     //endregion
-
 }
