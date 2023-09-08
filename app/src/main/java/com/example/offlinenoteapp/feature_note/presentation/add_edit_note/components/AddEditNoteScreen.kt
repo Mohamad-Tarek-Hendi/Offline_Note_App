@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -112,9 +113,13 @@ fun AddEditNoteScreen(
                     viewModel.onEvent(AddEditNoteEvent.SaveNote)
                 },
                 expanded = expandedFab,
-                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = Color(noteBackgroundAnimatable.value.toArgb()),
+                contentColor = Color.Black,
+                modifier = Modifier
+                    .clip(RectangleShape)
+                    .background(Color.Transparent),
                 icon = { Icon(Icons.Filled.Add, " Save note ") },
-                text = { Text(text = "Extended FAB") },
+                text = { Text(text = "Save") },
             )
         },
         // isFloatingActionButtonDocked = false,
