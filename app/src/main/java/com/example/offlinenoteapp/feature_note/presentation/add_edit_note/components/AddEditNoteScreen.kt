@@ -1,5 +1,6 @@
 package com.example.offlinenoteapp.feature_note.presentation.add_edit_note.components
 
+import android.annotation.SuppressLint
 import android.widget.Space
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
@@ -53,6 +54,7 @@ import com.example.offlinenoteapp.feature_note.presentation.add_edit_note.UiEven
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditNoteScreen(
@@ -86,11 +88,16 @@ fun AddEditNoteScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackBar -> {
-                    snackBarHostState.showSnackbar(message = "Note Deleted")
+                    snackBarHostState.showSnackbar(message = "Notes Saved")
                 }
 
                 is UiEvent.SaveNote -> {
                     navController.navigateUp()
+                }
+
+
+                is UiEvent.SaveNoteNotComplete -> {
+                    snackBarHostState.showSnackbar(message = "Note is Empty")
                 }
             }
         }
@@ -99,13 +106,12 @@ fun AddEditNoteScreen(
 
     //region Screen
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(3.dp)
+            .background(Color(noteBackgroundAnimatable.value.toArgb())),
         snackbarHost = {
-            SnackbarHost(snackBarHostState) {
-                Snackbar(modifier = Modifier.padding(16.dp)) {
-                    Text(it.visuals.message)
-                }
-            }
+            SnackbarHost(hostState = snackBarHostState)
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -119,7 +125,7 @@ fun AddEditNoteScreen(
                     .clip(RectangleShape)
                     .background(Color.Transparent),
                 icon = { Icon(Icons.Filled.Add, " Save note ") },
-                text = { Text(text = "Save") },
+                text = { Text(text = "Save Note") },
             )
         },
         // isFloatingActionButtonDocked = false,
@@ -129,7 +135,7 @@ fun AddEditNoteScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(noteBackgroundAnimatable.value)
-                .padding(it)
+                .padding(16.dp)
         ) {
 
             //region Circular Color

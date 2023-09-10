@@ -1,5 +1,6 @@
 package com.example.offlinenoteapp.feature_note.presentation.notes.components
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
@@ -29,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -51,6 +54,7 @@ import com.example.offlinenoteapp.feature_note.presentation.notes.NotesViewModel
 import com.example.offlinenoteapp.feature_note.presentation.util.Screen
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
@@ -73,13 +77,12 @@ fun NoteScreen(
 
     //region Screen
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(3.dp),
+
         snackbarHost = {
-            SnackbarHost(snackBarHostState) {
-                Snackbar(modifier = Modifier.padding(16.dp)) {
-                    Text(it.visuals.message)
-                }
-            }
+            SnackbarHost(hostState = snackBarHostState)
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -90,10 +93,10 @@ fun NoteScreen(
                 containerColor = MaterialTheme.colorScheme.onSurface,
                 contentColor = Color.White,
                 modifier = Modifier
-                    .clip(RectangleShape)
+                    .clip(CircleShape)
                     .background(Color.Transparent),
                 icon = { Icon(Icons.Filled.Add, "Localized Description") },
-                text = { Text(text = "Extended FAB") },
+                text = { Text(text = "New Note") },
             )
         },
         // isFloatingActionButtonDocked = false,
@@ -102,12 +105,14 @@ fun NoteScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
         ) {
 
             //region Text And Icon
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .padding(top = 11.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -165,10 +170,17 @@ fun NoteScreen(
                             scope.launch {
                                 val result = snackBarHostState.showSnackbar(
                                     message = "Note Deleted",
-                                    actionLabel = "Undo"
+                                    duration = SnackbarDuration.Short,
+                                    actionLabel = "Restore"
                                 )
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    viewModel.onEvent(NotesEvent.RestoreNote)
+
+                                when (result) {
+                                    SnackbarResult.ActionPerformed -> {
+                                        viewModel.onEvent(NotesEvent.RestoreNote)
+                                    }
+                                    SnackbarResult.Dismissed -> {
+                                        /* Handle snackbar dismissed */
+                                    }
                                 }
                             }
                         }
